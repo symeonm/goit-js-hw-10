@@ -1,19 +1,16 @@
 import './css/styles.css';
 import debounce from 'lodash/debounce';
 import Notiflix from 'notiflix';
-import {fetchURL} from './fetchCountries'
+import { fetchURL } from './fetchCountries';
 
 const DEBOUNCE_DELAY = 300;
 
 const input = document.querySelector('#search-box');
 const countryList = document.querySelector('.country-list');
 
-
 const countryInfo = document.querySelector('.country-info');
 
 input.addEventListener('input', debounce(onSearch, DEBOUNCE_DELAY));
-
-
 
 function onSearch(evt) {
   const name = evt.target.value.trim();
@@ -22,24 +19,26 @@ function onSearch(evt) {
       .then(data => {
         if (data.length === 1) {
           return cardCountry(data);
-        } else if (data.length > 10){
-            countryList.style.display = 'none';
-            Notiflix.Notify.info("Too many matches found. Please enter a more specific name.")
+        } else if (data.length > 10) {
+            countryInfo.style.display = 'none';
+          countryList.style.display = 'none';
+          Notiflix.Notify.info(
+            'Too many matches found. Please enter a more specific name.'
+          );
         } else {
-            return createMarkup(data);
+          return createMarkup(data);
         }
-        
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        Notiflix.Notify.failure('Oops, there is no country with that name')
+        countryInfo.style.display = 'none';
+        countryList.style.display = 'none';
+      });
   } else {
     countryInfo.style.display = 'none';
     countryList.style.display = 'none';
   }
 }
-
-
-
-
 
 function createMarkup(arr) {
   countryInfo.style.display = 'none';
@@ -72,7 +71,7 @@ function cardCountry(arr) {
     <h2 class='country-text'>${official}</h2>
     <p class='text'>Capital: ${capital}</p>
     <p class='text'>Population: ${population}</p>
-    <p class='text'>Languages: ${Object.values(languages).join('')}</p>
+    <p class='text'>Languages: ${Object.values(languages).join(', ')}</p>
    
    </li>`
     )

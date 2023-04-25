@@ -1,8 +1,8 @@
 const fetchURL = function fetchCountries(nameCountry) {
-    const BASE_URL = 'https://restcountries.com/v3.1';
-    const ENDPOINT = '/name/';
+    const BASE_URL = 'https://restcountries.com/v3.1/name/';
+    
 
-    const URL = `${BASE_URL}${ENDPOINT}${nameCountry}`;
+    const URL = `${BASE_URL}${nameCountry}?fields=name,capital,population,flags,languages`;
     return fetch(URL).then(resp => {
       if (!resp.ok) {
         throw new Error(
